@@ -64,10 +64,6 @@ const onPublish = async (state) => {
   }
 }
 
-// 组件对外暴露一个方法 open，基于open传来的参数，区分添加还是编辑
-// open({})  => 表单无需渲染，说明是添加
-// open({ id, ..., ... })  => 表单需要渲染，说明是编辑
-// open调用后，可以打开抽屉
 const editorRef = ref()
 const open = async (row) => {
   visibleDrawer.value = true // 显示抽屉
@@ -140,10 +136,6 @@ defineExpose({
         ></channel-select>
       </el-form-item>
       <el-form-item label="文章封面" prop="cover_img">
-        <!-- 此处需要关闭 element-plus 的自动上传，不需要配置 action 等参数
-             只需要做前端的本地预览图片即可，无需在提交前上传图标
-             语法：URL.createObjectURL(...) 创建本地预览的地址，来预览
-        -->
         <el-upload
           class="avatar-uploader"
           :show-file-list="false"

@@ -41,14 +41,6 @@ const handleCommand = async (key) => {
 </script>
 
 <template>
-  <!-- 
-    el-menu 整个菜单组件
-      :default-active="$route.path"  配置默认高亮的菜单项
-      router  router选项开启，el-menu-item 的 index 就是点击跳转的路径
-
-    el-menu-item 菜单项
-      index="/article/channel" 配置的是访问的跳转路径，配合default-active的值，实现高亮
-  -->
   <el-container class="layout-container">
     <el-aside width="200px">
       <div class="el-aside__logo"></div>
@@ -93,11 +85,7 @@ const handleCommand = async (key) => {
     </el-aside>
     <el-container>
       <el-header>
-        <div>
-          黑马程序员：<strong>{{
-            userStore.user.nickname || userStore.user.username
-          }}</strong>
-        </div>
+        <div>您好!{{ userStore.user.nickname || userStore.user.username }}</div>
         <el-dropdown placement="bottom-end" @command="handleCommand">
           <!-- 展示给用户，默认看到的 -->
           <span class="el-dropdown__box">
@@ -127,7 +115,7 @@ const handleCommand = async (key) => {
       <el-main>
         <router-view></router-view>
       </el-main>
-      <el-footer>大事件 ©2023 Created by 黑马程序员</el-footer>
+      <el-footer>欢迎来到大事件</el-footer>
     </el-container>
   </el-container>
 </template>
