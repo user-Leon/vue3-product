@@ -16,7 +16,8 @@ instance.interceptors.request.use(
     // TODO 2. 携带token
     const useStore = useUserStore()
     if (useStore.token) {
-      config.headers.Authorization = useStore.token
+      const token = useStore.token
+      config.headers.Authorization = token.startsWith('Bearer ') ? token : `Bearer ${token}`
     }
     return config
   },
@@ -43,7 +44,7 @@ instance.interceptors.response.use(
     }
 
     // 错误的默认情况 => 只要给提示
-    ElMessage.error(err.response.data.message || '服务异常')
+    ElMessage.error(err.response?.data?.message || '服务异常')
     return Promise.reject(err)
   }
 )

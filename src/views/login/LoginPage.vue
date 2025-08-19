@@ -4,6 +4,8 @@ import { User, Lock } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
 import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+
 const isRegister = ref(false)
 const form = ref()
 
@@ -13,10 +15,11 @@ const formModel = ref({
   password: '',
   repassword: ''
 })
+// 表单校验规则
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 4, max: 10, message: '用户名必须是 5-10位 的字符', trigger: 'blur' }
+    { min: 4, max: 10, message: '用户名必须是 4-10位 的字符', trigger: 'blur' }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
@@ -46,13 +49,18 @@ const rules = {
     }
   ]
 }
-
+// 注册
 const register = async () => {
-  await form.value.validate()
-  await userRegisterService(formModel.value)
-  ElMessage.success('注册成功')
-  isRegister.value = false
+  try {
+    await form.value.validate()
+    await userRegisterService(formModel.value)
+    ElMessage.success('注册成功')
+    isRegister.value = false
+  } catch (error) {
+    // 错误已在拦截器中提示，这里无需再抛出
+  }
 }
+// 切换到注册
 watch(isRegister, () => {
   formModel.value = {
     username: '',
@@ -60,14 +68,24 @@ watch(isRegister, () => {
     repassword: ''
   }
 })
+// 登录
 const userStore = useUserStore()
 const router = useRouter()
 const login = async () => {
-  await form.value.validate()
-  const res = await userLoginService(formModel.value)
-  userStore.setToken(res.data.token)
-  ElMessage.success('登录成功')
-  router.push('/')
+  try {
+    await form.value.validate()
+    const res = await userLoginService({
+      username: formModel.value.username,
+      password: formModel.value.password
+    })
+    const token = res.data?.token || res.data?.data?.token
+    if (!token) throw new Error('登录响应缺少 token')
+    userStore.setToken(token)
+    ElMessage.success('登录成功')
+    router.push('/')
+  } catch (error) {
+    // 错误已在拦截器中提示，这里无需再抛出
+  }
 }
 </script>
 
